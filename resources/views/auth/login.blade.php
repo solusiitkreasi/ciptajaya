@@ -29,10 +29,11 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 
     <script type="text/javascript" src="<?php echo asset('vendor/jquery/jquery.min.js') ?>"></script>
+
   </head>
 
   <body>
-    <div class="login">
+    {{-- <div class="login">
       <div class="box-login">
         <div class="login-action">
           <div class="logo">
@@ -67,9 +68,9 @@
           <img src="{{ url('public/images/for-login.png') }}" alt="">
         </div>
       </div>
-    </div>
+    </div>--}}
 
-    {{-- <div class="page login-page">
+    <div class="page login-page login">
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
           <div class="form-inner">
@@ -119,7 +120,7 @@
           </div>
         </div>
       </div>
-    </div> --}}
+    </div>
   </body>
 </html>
 <script>
