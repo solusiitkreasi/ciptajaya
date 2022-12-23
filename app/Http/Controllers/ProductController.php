@@ -509,19 +509,11 @@ class ProductController extends Controller
             }
         }
         $lims_product_data->update($data);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 
         \Session::flash('edit_message', 'Product updated "'. $lims_product_data->code .' - '.$lims_product_data->name.'" successfully');
-        // return redirect('products')->with('message', 'Product updated successfully');
-=======
-        // \Session::flash('Product "'.$lims_product_data->name .'" updated successfully');
-        return redirect('products_list')->with('edit_message', 'Product "'.$lims_product_data->name .'" updated successfully');
->>>>>>> Stashed changes
-=======
-        // \Session::flash('Product "'.$lims_product_data->name .'" updated successfully');
-        return redirect('products_list')->with('edit_message', 'Product "'.$lims_product_data->name .'" updated successfully');
->>>>>>> Stashed changes
+
+
     }
 
     public function search(Request $request)
@@ -601,12 +593,12 @@ class ProductController extends Controller
             $batch[] = $batch_no;
             $expired_date[] = $expiredDate;
             $qty[] = $product_warehouse_data->qty;
-            
+
             if($product_warehouse_data->imei_number)
                 $imei_number[] = $product_warehouse_data->imei_number;
             else
                 $imei_number[] = 'N/A';
-            
+
             if($product_warehouse_data->price)
                 $price[] = $product_warehouse_data->price;
             else
