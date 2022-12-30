@@ -15,5 +15,5 @@ yarn-error.log
 
 storage/framework/
 /storage/
-/storage/logs/
+/storage/logs
 /bootstrap/cache/
