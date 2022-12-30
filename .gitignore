@@ -1,8 +1,5 @@
 
 
-bootstrap/cache/cache/data
-storage/framework/cache
-storage/framework/sessions
 
 node_modules/
 npm-debug.log
@@ -18,3 +15,5 @@ yarn-error.log
 
 storage/framework/
 /storage/
+/storage/logs/
+/bootstrap/cache/
