@@ -100,7 +100,7 @@ class Pointernal extends Fpdf
     function Body(){
         $baris = 1;
         $row=1;
-        for($x=0; $x < 60; $x++)
+        // for($x=0; $x < 60; $x++)
             foreach ($this->detail as $value) {
                 if($baris==44){
                     $this->FooterSubTotal();
