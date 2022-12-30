@@ -16,3 +16,4 @@ yarn-error.log
 .env
 .envold
 
+storage/framework/
