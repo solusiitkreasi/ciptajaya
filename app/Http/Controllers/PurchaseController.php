@@ -26,6 +26,7 @@ use App\ProductBatch;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
+use App\Pdf\Pointernal;
 
 class PurchaseController extends Controller
 {
@@ -217,6 +218,7 @@ class PurchaseController extends Controller
                               <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                            <li><a href="'.route('purchases.invoice', $purchase->id).'" class="btn btn-link"><i class="fa fa-copy"></i> '.trans('file.Generate Invoice').'</a></li>
                                 <li>
                                     <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i> '.trans('file.View').'</button>
                                 </li>';
@@ -1250,5 +1252,50 @@ class PurchaseController extends Controller
             return redirect('purchases')->with('not_permitted', 'Purchase deleted successfully');;
         }
         
+    }
+
+    public function genInvoice($id)
+    {
+
+        if (!empty($id)){
+
+
+            $data_header = DB::table('purchases as p')
+            ->leftjoin('suppliers as s', 'p.supplier_id', '=', 's.id')
+            ->leftjoin('warehouses as wh', 'p.warehouse_id', '=', 'wh.id')
+            ->where('p.id', $id)
+            ->select('p.reference_no as no_po','p.note','p.created_at','wh.name as toko','wh.phone','wh.address', 's.name as supplier', 's.company_name',
+                        's.phone_number as supp_phone','s.address as supp_add','s.city as supp_city' )
+            ->get();
+
+
+
+            if($data_header) {
+
+                $data_detail = DB::table('product_purchases as pp')
+                ->leftjoin('products as p', 'pp.product_id', '=', 'p.id')
+                ->leftjoin('units as u', 'pp.purchase_unit_id','=', 'u.id')
+                ->where('purchase_id', $id)
+                ->select('pp.qty','u.unit_code','pp.net_unit_cost','p.name','p.code',)
+                ->get();
+                
+                $general_setting = DB::table('general_settings')->latest()->first();
+
+                if($data_detail){
+                    $output['general_setting']		= $general_setting;
+                    $output['header']		= $data_header;
+                    $output['detail']		= $data_detail;
+                }
+            }
+
+
+
+            $myPdf = new Pointernal($output);
+
+            $myPdf->Output('I', "Pointernal.pdf", true);
+
+            exit;
+        }
+
     }
 }
