@@ -228,6 +228,7 @@ return [
 	'Import Sale' => 'Import Sale',
 	'Sale Status' => 'Sale Status',
 	'Payment Status' => 'Payment Status',
+	'Generate Receipt' => 'Generate Receipt',
 	'Generate Invoice' => 'Generate Invoice',
 	'Add Payment' => 'Add Payment',
 	'View Payment' => 'View Payment',

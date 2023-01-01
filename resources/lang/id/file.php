@@ -458,7 +458,9 @@ return [
 
 	"Payment Status" => "Status pembayaran",
 
-	"Generate Invoice" => "Hasilkan invoice",
+	"Generate Receipt" => "Hasilkan Struk",
+
+	"Generate Invoice" => "Hasilkan Invoice",
 
 	"Add Payment" => "Tambah Pembayaran",
 

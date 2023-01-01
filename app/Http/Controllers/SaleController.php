@@ -49,6 +49,7 @@ use Srmklive\PayPal\Services\ExpressCheckout;
 use Srmklive\PayPal\Services\AdaptivePayments;
 use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
+use App\Pdf\Poeksternal;
 
 class SaleController extends Controller
 {
@@ -272,6 +273,7 @@ class SaleController extends Controller
                               <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                <li><a href="'.route('sale.receipt', $sale->id).'" class="btn btn-link"><i class="fa fa-copy"></i> '.trans('file.Generate Receipt').'</a></li>
                                 <li><a href="'.route('sale.invoice', $sale->id).'" class="btn btn-link"><i class="fa fa-copy"></i> '.trans('file.Generate Invoice').'</a></li>
                                 <li>
                                     <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i> '.trans('file.View').'</button>
@@ -1858,10 +1860,10 @@ class SaleController extends Controller
     public function printLastReciept()
     {
         $sale = Sale::where('sale_status', 1)->latest()->first();
-        return redirect()->route('sale.invoice', $sale->id);
+        return redirect()->route('sale.receipt', $sale->id);
     }
 
-    public function genInvoice($id)
+    public function genReceipt($id)
     {
         $lims_sale_data = Sale::find($id);
         $lims_product_sale_data = Product_Sale::where('sale_id', $id)->get();
@@ -1877,7 +1879,53 @@ class SaleController extends Controller
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
 
-        return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
+        return view('sale.receipt', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
+    }
+
+    public function genInvoice($id)
+    {
+
+        if (!empty($id)){
+
+            $data_header = DB::table('sales as s')
+            ->leftjoin('customers as c', 's.customer_id', '=', 'c.id')
+            ->leftjoin('warehouses as wh', 's.warehouse_id', '=', 'wh.id')
+            ->where('s.id', $id)
+            ->select('s.reference_no','s.sale_note','s.created_at',
+            'wh.name as toko','wh.phone as phone_toko','wh.address as address_toko',
+            'c.name as c_name','c.company_name','c.phone_number',
+            'c.address','c.city','c.state','c.postal_code','c.country')
+            ->get();
+
+
+            $output['detail'] = array();
+			$output['header'] = array();
+
+            if($data_header) {
+                $data_detail = DB::table('product_sales as ps')
+                ->leftjoin('products as p', 'ps.product_id', '=', 'p.id')
+                ->leftjoin('units as u', 'ps.sale_unit_id', '=', 'u.id')
+                ->where('ps.sale_id', $id)
+                ->select('p.code', 'p.name', 'ps.qty', 'u.unit_code as unit', 'ps.net_unit_price as price')
+                ->get();
+
+
+                $general_setting = DB::table('general_settings')->latest()->first();
+
+                if($data_detail){
+                    $output['general_setting']		= $general_setting;
+                    $output['header']		= $data_header;
+                    $output['detail']		= $data_detail;
+                }
+            }
+
+            $myPdf = new Poeksternal($output);
+
+            $myPdf->Output('I', "Poeksternal.pdf", true);
+
+            exit;
+        }
+
     }
 
     public function addPayment(Request $request)
