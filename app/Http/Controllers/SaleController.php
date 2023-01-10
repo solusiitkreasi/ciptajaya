@@ -751,7 +751,7 @@ class SaleController extends Controller
             }
         }
         if($lims_sale_data->sale_status == '1')
-            return redirect('sales/gen_invoice/' . $lims_sale_data->id)->with('message', $message);
+            return redirect('sales/gen_receipt/' . $lims_sale_data->id)->with('message', $message);
         elseif($data['pos'])
             return redirect('pos')->with('message', $message);
         else
@@ -1860,7 +1860,12 @@ class SaleController extends Controller
     public function printLastReciept()
     {
         $sale = Sale::where('sale_status', 1)->latest()->first();
-        return redirect()->route('sale.receipt', $sale->id);
+
+        if(!empty($sale))
+            return redirect()->route('sale.receipt', $sale->id);
+        else
+            return redirect()->back()->with('message', ' Reciept Not Avalaible !');
+
     }
 
     public function genReceipt($id)
