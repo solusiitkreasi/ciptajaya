@@ -1001,6 +1001,7 @@ class SaleController extends Controller
             $batch_no[] = null;
             $product_batch_id[] = null;
             $expired_date[] = null;
+            $product_price[] = $product_warehouse->price;
         }
         //retrieve product with type of digital, combo and service
         $lims_product_data = Product::whereNotIn('type', ['standard'])->where('is_active', true)->get();
@@ -1016,6 +1017,7 @@ class SaleController extends Controller
             $batch_no[] = null;
             $product_batch_id[] = null;
             $expired_date[] = null;
+            $product_price[] = $product_warehouse->price;
         }
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id, $expired_date];
         return $product_data;
