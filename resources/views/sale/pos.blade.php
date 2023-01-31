@@ -2487,8 +2487,8 @@ $(document).on('click', '.product-img', function() {
         pos = product_code.indexOf(data[0]);
         if(pos < 0)
             alert( name_p + '\r\nProduct is not avaialable in the selected warehouse,\r\nplease check stock/qty');
-        else if(pos_price <= 0)
-            alert( name_p + '\r\nPrice is not avaialable, please insert price before add cart');
+        // else if(pos_price <= 0)
+        //     alert( name_p + '\r\nPrice is not avaialable, please insert price before add cart');
         else{
             productSearch(data[0]);
         }
