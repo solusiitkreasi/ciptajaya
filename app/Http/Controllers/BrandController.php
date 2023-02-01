@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use Illuminate\Http\Request;
 use App\Brand;
 use Illuminate\Validation\Rule;
@@ -31,11 +31,23 @@ class BrandController extends Controller
 
         $input = $request->except('image');
 
-        $codeBrand = Brand::where('code', 'LIKE', 'M%')->count();
-        $codeBrand++;
-        $genCode = 'M'. str_pad($codeBrand, 4, '0', STR_PAD_LEFT);
+        $last_row_brand = DB::table('brands')->get()->last();
+        $last_code = $last_row_brand->code;
+        $pluscode = substr($last_code,1)+1;
+        $count = strlen($pluscode);
+        $code = "";
 
-        $input['code']      = $genCode;
+        if ($count == 1) {
+            $code = "M000".$pluscode;
+        } elseif ($count == 2) {
+            $code = "M00".$pluscode;
+        } elseif ($count == 3) {
+            $code = "M0".$pluscode;
+        } else {
+            $code = "M0000";
+        }
+
+        $input['code']      = $code;
         $input['is_active'] = true;
         $image = $request->image;
         if ($image) {
