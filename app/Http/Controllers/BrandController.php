@@ -29,23 +29,13 @@ class BrandController extends Controller
             'image' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
         ]);
 
-        $last_row_brand = DB::table('brands')->get()->last();
-        $last_code = $last_row_brand->code;
-        $pluscode = substr($last_code,1)+1;
-        $count = strlen($pluscode);
-        $code = "";
-
-        if ($count == 1) {
-            $code = "M000".$pluscode;
-        } elseif ($count == 2) {
-            $code = "M00".$pluscode;
-        } elseif ($count == 3) {
-            $code = "M0".$pluscode;
-        } else {
-            $code = "M0000";
-        }
-
         $input = $request->except('image');
+
+        $codeBrand = Brand::where('code', 'LIKE', 'M%')->count();
+        $codeBrand++;
+        $genCode = 'M'. str_pad($codeBrand, 4, '0', STR_PAD_LEFT);
+
+        $input['code']      = $genCode;
         $input['is_active'] = true;
         $image = $request->image;
         if ($image) {
@@ -58,7 +48,6 @@ class BrandController extends Controller
         Brand::create($input);
         return redirect('brand');
     }
-
     public function edit($id)
     {
         $lims_brand_data = Brand::findOrFail($id);
@@ -159,15 +148,15 @@ class BrandController extends Controller
             if($brand > 0) {
                 $data = Brand::where('id', $brand)->first();
                 $csvData[]=$data->title.','.$data->image;
-            }   
-        }        
+            }
+        }
         $filename=date('Y-m-d').".csv";
         $file_path=public_path().'/downloads/'.$filename;
-        $file_url=url('/').'/downloads/'.$filename;   
+        $file_url=url('/').'/downloads/'.$filename;
         $file = fopen($file_path,"w+");
         foreach ($csvData as $exp_data){
           fputcsv($file,explode(',',$exp_data));
-        }   
+        }
         fclose($file);
         return $file_url;
     }
