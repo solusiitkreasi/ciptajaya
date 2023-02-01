@@ -58,7 +58,7 @@ class BrandController extends Controller
             $input['image'] = $imageName;
         }
         Brand::create($input);
-        return redirect('brand')->with('message', 'Brand imported successfully');
+        return redirect('brand')->with('message', 'Brand Add successfully');
     }
     public function edit($id)
     {
