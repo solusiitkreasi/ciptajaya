@@ -2568,10 +2568,10 @@ $('button[name="update_btn"]').on("click", function() {
         return;
     }
 
-    if(edit_qty < 1) {
+    if(edit_qty <= 0) {
         $('input[name="edit_qty"]').val(1);
-        edit_qty = 1;
-        alert("Quantity can't be less than 1");
+        edit_qty = 0.1;
+        alert("Quantity can't be less than 0");
     }
 
     var tax_rate_all = <?php echo json_encode($tax_rate_all) ?>;
