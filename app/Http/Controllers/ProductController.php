@@ -861,10 +861,8 @@ class ProductController extends Controller
                     $codeProduct = $inptCode.date('mY')."00".$serialNumber;
                 } elseif ($length == 3) {
                     $codeProduct = $inptCode.date('mY')."0".$serialNumber;
-                    dd($codeProduct);
                 } else {
                     $codeProduct = $inptCode.date('mY').$serialNumber;
-                    dd($codeProduct);
                 }
             } else {
                 $codeProduct = $inptCode.date('mY')."0001";
