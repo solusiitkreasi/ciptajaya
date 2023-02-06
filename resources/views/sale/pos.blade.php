@@ -3169,7 +3169,7 @@ function calculateRowProductData(quantity) {
         row_product_price = product_price[rowindex];
 
     if (tax_method[rowindex] == 1) {
-        var net_unit_price = (row_product_price + product_unit_cost[rowindex]) - product_discount[rowindex];
+        var net_unit_price = (row_product_price - product_discount[rowindex]) + product_unit_cost[rowindex];
         var tax = net_unit_price * quantity * (tax_rate[rowindex] / 100);
         var sub_total = (net_unit_price * quantity) + tax;
 
@@ -3179,7 +3179,7 @@ function calculateRowProductData(quantity) {
             var sub_total_unit = sub_total;
     }
     else {
-        var sub_total_unit =  (row_product_price + product_unit_cost[rowindex]) - product_discount[rowindex];
+        var sub_total_unit = (row_product_price - product_discount[rowindex]) + product_unit_cost[rowindex];
         var net_unit_price = (100 / (100 + tax_rate[rowindex])) * sub_total_unit;
         var tax = (sub_total_unit - net_unit_price) * quantity;
         var sub_total = sub_total_unit * quantity;
