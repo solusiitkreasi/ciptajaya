@@ -876,6 +876,11 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
+                                            <input type="hidden" name="total_cost" value="0.00" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
                                             <input type="hidden" name="total_tax" value="0.00"/>
                                         </div>
                                     </div>
@@ -937,31 +942,31 @@
                         <h2>{{trans('file.grand total')}} <span id="grand-total">0.00</span></h2>
                     </div>
                     <div class="payment-options row justify-content-center">
-                        <div class="column-5">
+                        <!-- <div class="column-5">
                             <button style="background: #0984e3" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="credit-card-btn"><i class="fa fa-credit-card"></i> {{trans('file.Card')}}</button>
-                        </div>
+                        </div> -->
                         <div class="column-5">
                             <button style="background: #00cec9" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i> {{trans('file.Cash')}}</button>
                         </div>
-                        {{-- <div class="column-5">
+                        <!-- <div class="column-5">
                             <button style="background-color: #213170" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="paypal-btn"><i class="fa fa-paypal"></i> {{trans('file.PayPal')}}</button>
-                        </div> --}}
-                        <div class="column-5">
+                        </div> -->
+                        <!-- <div class="column-5">
                             <button style="background-color: #e28d02" type="button" class="btn btn-custom" id="draft-btn"><i class="dripicons-flag"></i> {{trans('file.Draft')}}</button>
-                        </div>
+                        </div> -->
                         <div class="column-5">
                             <button style="background-color: #fd7272" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cheque-btn"><i class="fa fa-money"></i> {{trans('file.Cheque')}}</button>
                         </div>
-                        <div class="column-5">
+                        <!-- <div class="column-5">
                             <button style="background-color: #5f27cd" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="fa fa-credit-card-alt"></i> {{trans('file.Gift Card')}}</button>
-                        </div>
+                        </div> -->
                         <div class="column-5">
                             <button style="background-color: #b33771" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> {{trans('file.Deposit')}}</button>
                         </div>
                         @if($lims_reward_point_setting_data->is_active)
-                        <div class="column-5">
+                        <!-- <div class="column-5">
                             <button style="background-color: #319398" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="point-btn"><i class="dripicons-rocket"></i> {{trans('file.Points')}}</button>
-                        </div>
+                        </div> -->
                         @endif
                         <div class="column-5">
                             <button style="background-color: #d63031;" type="button" class="btn btn-custom" id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i> {{trans('file.Cancel')}}</button>
@@ -1434,6 +1439,10 @@
                                         <select name="edit_unit" class="form-control selectpicker">
                                         </select>
                                     </div>
+                                    <div class="col-md-4 form-group">
+                                        <label>{{trans('file.Unit Cost')}}</label>
+                                        <input type="text" name="edit_unit_cost" class="form-control numkey" step="any">
+                                    </div>
                                 </div>
                                 <button type="button" name="update_btn" class="btn btn-primary">{{trans('file.update')}}</button>
                             </form>
@@ -1846,6 +1855,7 @@ var brands = [];
 // array data with selection
 var product_price = [];
 var product_discount = [];
+var product_unit_cost = [];
 var tax_rate = [];
 var tax_name = [];
 var tax_method = [];
@@ -1880,6 +1890,7 @@ var currency = <?php echo json_encode($currency) ?>;
 var localStorageQty = [];
 var localStorageProductId = [];
 var localStorageProductDiscount = [];
+var localStorageProductUnitCost = [];
 var localStorageTaxRate = [];
 var localStorageNetUnitPrice = [];
 var localStorageTaxValue = [];
@@ -1920,6 +1931,7 @@ function getSavedValue  (v) {
 if(getSavedValue("localStorageQty")) {
   localStorageQty = getSavedValue("localStorageQty").split(",");
   localStorageProductDiscount = getSavedValue("localStorageProductDiscount").split(",");
+  localStorageProductUnitCost = getSavedValue("localStorageProductUnitCost").split(",");
   localStorageTaxRate = getSavedValue("localStorageTaxRate").split(",");
   localStorageNetUnitPrice = getSavedValue("localStorageNetUnitPrice").split(",");
   localStorageTaxValue = getSavedValue("localStorageTaxValue").split(",");
@@ -1938,6 +1950,7 @@ if(getSavedValue("localStorageQty")) {
   for(var i = 0; i < localStorageQty.length; i++) {
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ') .qty').val(localStorageQty[i]);
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.discount-value').val(localStorageProductDiscount[i]);
+    $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.unit-cost-value').val(localStorageProductUnitCost[i]);
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-rate').val(localStorageTaxRate[i]);
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.net_unit_price').val(localStorageNetUnitPrice[i]);
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-value').val(localStorageTaxValue[i]);
@@ -1960,6 +1973,7 @@ if(getSavedValue("localStorageQty")) {
     product_price.push(parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.product_price').val()));
     var quantity = parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.qty').val());
     product_discount.push(parseFloat(localStorageProductDiscount[i] / localStorageQty[i]).toFixed(2));
+    product_unit_cost.push(parseFloat(localStorageProductUnitCost[i] / localStorageQty[i]).toFixed(2));
     tax_rate.push(parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-rate').val()));
     tax_name.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-name').val());
     tax_method.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-method').val());
@@ -2528,6 +2542,7 @@ $("table.order-list tbody").on("click", ".ibtnDel", function(event) {
     rowindex = $(this).closest('tr').index();
     product_price.splice(rowindex, 1);
     product_discount.splice(rowindex, 1);
+    product_unit_cost.splice(rowindex, 1);
     tax_rate.splice(rowindex, 1);
     tax_name.splice(rowindex, 1);
     tax_method.splice(rowindex, 1);
@@ -2539,6 +2554,7 @@ $("table.order-list tbody").on("click", ".ibtnDel", function(event) {
     localStorageQty.splice(rowindex, 1);
     localStorageSaleUnit.splice(rowindex, 1);
     localStorageProductDiscount.splice(rowindex, 1);
+    localStorageProductUnitCost.splice(rowindex, 1);
     localStorageTaxRate.splice(rowindex, 1);
     localStorageNetUnitPrice.splice(rowindex, 1);
     localStorageTaxValue.splice(rowindex, 1);
@@ -2557,6 +2573,7 @@ $("table.order-list tbody").on("click", ".ibtnDel", function(event) {
     localStorage.setItem("localStorageSaleUnit", localStorageSaleUnit);
     localStorage.setItem("localStorageProductCode", localStorageProductCode);
     localStorage.setItem("localStorageProductDiscount", localStorageProductDiscount);
+    localStorage.setItem("localStorageProductUnitCost", localStorageProductUnitCost);
     localStorage.setItem("localStorageTaxRate", localStorageTaxRate);
     localStorage.setItem("localStorageTaxName", localStorageTaxName);
     localStorage.setItem("localStorageTaxMethod", localStorageTaxMethod);
@@ -2589,6 +2606,7 @@ $('button[name="update_btn"]').on("click", function() {
     var edit_discount = $('input[name="edit_discount"]').val();
     var edit_qty = $('input[name="edit_qty"]').val();
     var edit_unit_price = $('input[name="edit_unit_price"]').val();
+    var edit_unit_cost = $('input[name="edit_unit_cost"]').val();
 
     if (parseFloat(edit_discount) > parseFloat(edit_unit_price)) {
         alert('Invalid Discount Input!');
@@ -2607,6 +2625,7 @@ $('button[name="update_btn"]').on("click", function() {
     tax_name[rowindex] = localStorageTaxName[rowindex] = $('select[name="edit_tax_rate"] option:selected').text();
 
     product_discount[rowindex] = $('input[name="edit_discount"]').val();
+    product_unit_cost[rowindex] = $('input[name="edit_unit_cost"]').val();
     if(product_type[pos] == 'standard'){
         var row_unit_operator = unit_operator[rowindex].slice(0, unit_operator[rowindex].indexOf(","));
         var row_unit_operation_value = unit_operation_value[rowindex].slice(0, unit_operation_value[rowindex].indexOf(","));
@@ -2903,6 +2922,7 @@ function addNewProduct(data){
     cols += '<input type="hidden" class="sale-unit" name="sale_unit[]" value="' + temp_unit_name[0] + '"/>';
     cols += '<input type="hidden" class="net_unit_price" name="net_unit_price[]" />';
     cols += '<input type="hidden" class="discount-value" name="discount[]" />';
+    cols += '<input type="hidden" class="unit-cost-value" name="unit_cost[]" />';
     cols += '<input type="hidden" class="tax-rate" name="tax_rate[]" value="' + data[3] + '"/>';
     cols += '<input type="hidden" class="tax-value" name="tax[]" />';
     cols += '<input type="hidden" class="tax-name" value="'+data[4]+'" />';
@@ -2929,6 +2949,7 @@ function addNewProduct(data){
         product_price.splice(rowindex, 0, parseFloat(data[2] * currency['exchange_rate']) + parseFloat(data[2] * currency['exchange_rate'] * customer_group_rate));
     }
     product_discount.splice(rowindex, 0, '0.00');
+    product_unit_cost.splice(rowindex, 0, '0.00');
     tax_rate.splice(rowindex, 0, parseFloat(data[3]));
     tax_name.splice(rowindex, 0, data[4]);
     tax_method.splice(rowindex, 0, data[5]);
@@ -2943,6 +2964,7 @@ function addNewProduct(data){
     localStorageProductCode.splice(rowindex, 0, data[1]);
     localStorageSaleUnit.splice(rowindex, 0, temp_unit_name[0]);
     localStorageProductDiscount.splice(rowindex, 0, product_discount[rowindex]);
+    localStorageProductUnitCost.splice(rowindex, 0, product_unit_cost[rowindex]);
     localStorageTaxRate.splice(rowindex, 0, tax_rate[rowindex].toFixed(2));
     localStorageTaxName.splice(rowindex, 0, data[4]);
     localStorageTaxMethod.splice(rowindex, 0, data[5]);
@@ -2986,6 +3008,8 @@ function edit(){
     $('input[name="edit_qty"]').val(qty);
 
     $('input[name="edit_discount"]').val(parseFloat(product_discount[rowindex]).toFixed(2));
+
+    $('input[name="edit_unit_cost"]').val(parseFloat(product_unit_cost[rowindex]).toFixed(2));
 
     var tax_name_all = <?php echo json_encode($tax_name_all) ?>;
     pos = tax_name_all.indexOf(tax_name[rowindex]);
@@ -3145,7 +3169,7 @@ function calculateRowProductData(quantity) {
         row_product_price = product_price[rowindex];
 
     if (tax_method[rowindex] == 1) {
-        var net_unit_price = row_product_price - product_discount[rowindex];
+        var net_unit_price = row_product_price - product_discount[rowindex] - product_unit_cost[rowindex];
         var tax = net_unit_price * quantity * (tax_rate[rowindex] / 100);
         var sub_total = (net_unit_price * quantity) + tax;
 
@@ -3155,13 +3179,14 @@ function calculateRowProductData(quantity) {
             var sub_total_unit = sub_total;
     }
     else {
-        var sub_total_unit = row_product_price - product_discount[rowindex];
+        var sub_total_unit = row_product_price - product_discount[rowindex] - product_unit_cost[rowindex];
         var net_unit_price = (100 / (100 + tax_rate[rowindex])) * sub_total_unit;
         var tax = (sub_total_unit - net_unit_price) * quantity;
         var sub_total = sub_total_unit * quantity;
     }
 
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.discount-value').val((product_discount[rowindex] * quantity).toFixed(2));
+    $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.unit-cost-value').val((product_unit_cost[rowindex] * quantity).toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.tax-rate').val(tax_rate[rowindex].toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.net_unit_price').val(net_unit_price.toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.tax-value').val(tax.toFixed(2));
@@ -3170,6 +3195,8 @@ function calculateRowProductData(quantity) {
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.subtotal-value').val(sub_total.toFixed(2));
 
     localStorageProductDiscount.splice(rowindex, 1, (product_discount[rowindex] * quantity).toFixed(2));
+    // calculate unit cost
+    localStorageProductUnitCost.splice(rowindex, 1, (product_unit_cost[rowindex] * quantity).toFixed(2));
     localStorageTaxRate.splice(rowindex, 1, tax_rate[rowindex].toFixed(2));
     localStorageNetUnitPrice.splice(rowindex, 1, net_unit_price.toFixed(2));
     localStorageTaxValue.splice(rowindex, 1, tax.toFixed(2));
@@ -3177,6 +3204,7 @@ function calculateRowProductData(quantity) {
     localStorageSubTotal.splice(rowindex, 1, sub_total.toFixed(2));
     console.log(localStorageNetUnitPrice);
     localStorage.setItem("localStorageProductDiscount", localStorageProductDiscount);
+    localStorage.setItem("localStorageProductUnitCost", localStorageProductUnitCost);
     localStorage.setItem("localStorageTaxRate", localStorageTaxRate);
     localStorage.setItem("localStorageNetUnitPrice", localStorageNetUnitPrice);
     localStorage.setItem("localStorageTaxValue", localStorageTaxValue);
@@ -3205,6 +3233,14 @@ function calculateTotal() {
     });
 
     $('input[name="total_discount"]').val(total_discount.toFixed(2));
+
+    //Sum of cost
+    var total_cost = 0;
+    $("table.order-list tbody .unit-cost-value").each(function() {
+        total_cost += parseFloat($(this).val());
+    });
+
+    $('input[name="total_cost"]').val(total_cost.toFixed(2));
 
     //Sum of tax
     var total_tax = 0;
@@ -3337,6 +3373,7 @@ function cancel(rownumber) {
     while(rownumber >= 0) {
         product_price.pop();
         product_discount.pop();
+        product_unit_cost.pop();
         tax_rate.pop();
         tax_name.pop();
         tax_method.pop();
