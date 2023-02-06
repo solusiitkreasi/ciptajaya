@@ -1819,6 +1819,8 @@ var product_type = [];
 var product_id = [];
 var product_list = [];
 var qty_list = [];
+var categories = [];
+var brands = [];
 
 // array data with selection
 var product_price = [];
@@ -2173,8 +2175,10 @@ $.get('sales/getproduct/' + id, function(data) {
     product_warehouse_price = data[7];
     batch_no = data[8];
     product_batch_id = data[9];
+    categories = data[11];
+    brands = data[12];
     $.each(product_code, function(index) {
-        lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')');
+        lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')  ' + brands[index] + ' - ' + categories[index]);
     });
 });
 
@@ -2371,8 +2375,10 @@ $('select[name="warehouse_id"]').on('change', function() {
         product_warehouse_price = data[7];
         batch_no = data[8];
         product_batch_id = data[9];
+        categories = data[11];
+        brands = data[12];
         $.each(product_code, function(index) {
-            lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')');
+            lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')  ' + brands[index] + ' - ' + categories[index]  );
         });
     });
 

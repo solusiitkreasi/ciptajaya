@@ -912,6 +912,8 @@ class SaleController extends Controller
     public function getProduct($id)
     {
         $lims_product_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
+        ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
+        ->leftjoin('categories', 'products.category_id', '=', 'categories.id')
         ->where([
             ['products.is_active', true],
             ['product_warehouse.warehouse_id', $id],
@@ -919,13 +921,14 @@ class SaleController extends Controller
         ])
         ->whereNull('product_warehouse.variant_id')
         ->whereNull('product_warehouse.product_batch_id')
-        ->select('product_warehouse.*')
+        ->select('brands.title', 'categories.name as cat' , 'product_warehouse.*')
         ->get();
 
         config()->set('database.connections.mysql.strict', false);
         \DB::reconnect(); //important as the existing connection if any would be in strict mode
 
         $lims_product_with_batch_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
+        ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
         ->where([
             ['products.is_active', true],
             ['product_warehouse.warehouse_id', $id],
@@ -933,7 +936,7 @@ class SaleController extends Controller
         ])
         ->whereNull('product_warehouse.variant_id')
         ->whereNotNull('product_warehouse.product_batch_id')
-        ->select('product_warehouse.*')
+        ->select('brands.title', 'product_warehouse.*')
         ->groupBy('product_warehouse.product_id')
         ->get();
 
@@ -942,17 +945,21 @@ class SaleController extends Controller
         \DB::reconnect();
 
         $lims_product_with_variant_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
+        ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
         ->where([
             ['products.is_active', true],
             ['product_warehouse.warehouse_id', $id],
             ['product_warehouse.qty', '>', 0]
-        ])->whereNotNull('product_warehouse.variant_id')->select('product_warehouse.*')->get();
+        ])->whereNotNull('product_warehouse.variant_id')
+        ->select('brands.title', 'product_warehouse.*')->get();
 
         $product_code = [];
         $product_name = [];
         $product_qty = [];
         $product_price = [];
         $product_data = [];
+        $categories = [];
+        $brands = [];
         //product without variant
         foreach ($lims_product_warehouse_data as $product_warehouse)
         {
@@ -968,6 +975,8 @@ class SaleController extends Controller
             $batch_no[] = null;
             $product_batch_id[] = null;
             $expired_date[] = null;
+            $categories[] = $product_warehouse->cat;
+            $brands[] = $product_warehouse->title;
         }
         //product with batches
         foreach ($lims_product_with_batch_warehouse_data as $product_warehouse)
@@ -985,6 +994,8 @@ class SaleController extends Controller
             $batch_no[] = $product_batch_data->batch_no;
             $product_batch_id[] = $product_batch_data->id;
             $expired_date[] = date(config('date_format'), strtotime($product_batch_data->expired_date));
+            $categories[] = $product_warehouse->cat;
+            $brands[] = $product_warehouse->title;
         }
         //product with variant
         foreach ($lims_product_with_variant_warehouse_data as $product_warehouse)
@@ -1002,9 +1013,13 @@ class SaleController extends Controller
             $product_batch_id[] = null;
             $expired_date[] = null;
             $product_price[] = $product_warehouse->price;
+            $categories[] = null;
+            $brands[] = null;
         }
         //retrieve product with type of digital, combo and service
-        $lims_product_data = Product::whereNotIn('type', ['standard'])->where('is_active', true)->get();
+        $lims_product_data = Product::whereNotIn('type', ['standard'])
+        ->where('is_active', true)
+        ->get();
         foreach ($lims_product_data as $product)
         {
             $product_qty[] = $product->qty;
@@ -1018,8 +1033,12 @@ class SaleController extends Controller
             $product_batch_id[] = null;
             $expired_date[] = null;
             $product_price[] = $product_warehouse->price;
+            $categories[] = $product_warehouse->cat;
+            $brands[] = $product_warehouse->title;
         }
-        $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id, $expired_date];
+        
+        $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id, $expired_date, $categories, $brands];
+        // die(json_encode($product_data));
         return $product_data;
     }
 
@@ -1125,6 +1144,7 @@ class SaleController extends Controller
         }
         elseif(!empty($product_search)){
             $lims_product_list = DB::table('product_warehouse as pw')
+                ->leftjoin('products as p', 'pw.product_id', '=', 'p.id')
                 ->leftjoin('products as p', 'pw.product_id', '=', 'p.id')
                 ->where([
                     ['p.name','LIKE','%'.$product_search.'%'],
@@ -1895,7 +1915,7 @@ class SaleController extends Controller
         if (!empty($id)){
 
             $data_header = DB::table('sales as s')
-            ->leftjoin('customers as c', 's.customer_id', '=', 'c.id')
+            ->leftjoin('customers as c', 's.customer_id', '=', 'categories.id')
             ->leftjoin('warehouses as wh', 's.warehouse_id', '=', 'wh.id')
             ->where('s.id', $id)
             ->select('s.reference_no','s.sale_note','s.created_at',
