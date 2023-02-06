@@ -181,6 +181,12 @@
                         <th style="text-align:right">{{number_format($lims_sale_data->shipping_cost, 0, ',', '.')}}</th>
                     </tr>
                     @endif
+                    @if($lims_sale_data->extra_cost)
+                    <tr>
+                        <th colspan="2" style="text-align:left">{{trans('file.Extra Cost')}}</th>
+                        <th style="text-align:right">{{number_format($lims_sale_data->extra_cost, 0, ',', '.')}}</th>
+                    </tr>
+                    @endif
                     <tr>
                         <th colspan="2" style="text-align:left">{{trans('file.grand total')}}</th>
                         <th style="text-align:right">{{number_format($lims_sale_data->grand_total, 0, ',', '.')}}</th>
@@ -194,10 +200,17 @@
                     </tr>
 
                     @foreach($lims_payment_data as $payment_data)
-                    <tr style="background-color:#ddd;">
-                        <td style="padding: 5px;width:30%">Metode Bayar: {{$payment_data->paying_method}}</td>
-                        <td style="padding: 5px;width:40%"><b>{{trans('file.Amount')}}: {{number_format($payment_data->amount, 0, ',', '.')}}</b></td>
-                        <td style="padding: 5px;width:30%">{{trans('file.Change')}}: {{number_format($payment_data->change, 0, ',', '.')}}</td>
+                    <tr>
+                        <th colspan="2" style="text-align:left">Metode Bayar</th>
+                        <th style="text-align:right">{{$payment_data->paying_method}}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="text-align:left"><b>{{trans('file.Amount')}}</b></th>
+                        <th style="text-align:right"><b>{{number_format($payment_data->amount, 0, ',', '.')}}</b></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="text-align:left"><b>{{trans('file.Change')}}</b></th>
+                        <th style="text-align:right"><b>{{number_format($payment_data->change, 0, ',', '.')}}</b></th>
                     </tr>
                     @endforeach
                     <tr><td class="centered" colspan="3">
@@ -208,7 +221,7 @@
                         <td class="centered" colspan="3">
                         <?php echo '<img style="margin-top:10px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C128') . '" width="300" alt="barcode"   />';?>
                         
-                        <?php echo '<img style="margin-top:10px;" src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->reference_no, 'QRCODE') . '" alt="barcode"   />';?>
+                        {{-- <?php echo '<img style="margin-top:10px;" src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->reference_no, 'QRCODE') . '" alt="barcode"   />';?> --}}
                         </td>
                     </tr>
                 <!-- </tfoot> -->
