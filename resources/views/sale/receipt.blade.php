@@ -206,7 +206,7 @@
                     </tr>
                     <tr>
                         <th colspan="2" style="text-align:left"><b>{{trans('file.Amount')}}</b></th>
-                        <th style="text-align:right"><b>{{number_format($payment_data->amount, 0, ',', '.')}}</b></th>
+                        <th style="text-align:right"><b>{{number_format($payment_data->amount + $payment_data->change, 0, ',', '.')}}</b></th>
                     </tr>
                     <tr>
                         <th colspan="2" style="text-align:left"><b>{{trans('file.Change')}}</b></th>
