@@ -1440,7 +1440,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <label>{{trans('file.Unit Cost')}}</label>
+                                        <label>{{trans('file.Extra Cost')}}</label>
                                         <input type="text" name="edit_unit_cost" class="form-control numkey" step="any">
                                     </div>
                                 </div>
