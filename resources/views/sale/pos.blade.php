@@ -876,7 +876,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <input type="hidden" name="total_unit_cost" value="0.00" />
+                                            <input type="hidden" name="total_cost" value="0.00" />
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -3169,7 +3169,7 @@ function calculateRowProductData(quantity) {
         row_product_price = product_price[rowindex];
 
     if (tax_method[rowindex] == 1) {
-        var net_unit_price = row_product_price + product_unit_cost[rowindex] - product_discount[rowindex] ;
+        var net_unit_price = row_product_price - product_discount[rowindex] - product_unit_cost[rowindex];
         var tax = net_unit_price * quantity * (tax_rate[rowindex] / 100);
         var sub_total = (net_unit_price * quantity) + tax;
 
@@ -3179,14 +3179,14 @@ function calculateRowProductData(quantity) {
             var sub_total_unit = sub_total;
     }
     else {
-        var sub_total_unit = row_product_price + product_unit_cost[rowindex] - product_discount[rowindex] ;
+        var sub_total_unit = row_product_price - product_discount[rowindex] - product_unit_cost[rowindex];
         var net_unit_price = (100 / (100 + tax_rate[rowindex])) * sub_total_unit;
         var tax = (sub_total_unit - net_unit_price) * quantity;
         var sub_total = sub_total_unit * quantity;
     }
 
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.discount-value').val((product_discount[rowindex] * quantity).toFixed(2));
-    // $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.unit-cost-value').val((product_unit_cost[rowindex] * quantity).toFixed(2));
+    $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.unit-cost-value').val((product_unit_cost[rowindex] * quantity).toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.tax-rate').val(tax_rate[rowindex].toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.net_unit_price').val(net_unit_price.toFixed(2));
     $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.tax-value').val(tax.toFixed(2));
@@ -3235,12 +3235,12 @@ function calculateTotal() {
     $('input[name="total_discount"]').val(total_discount.toFixed(2));
 
     //Sum of cost
-    var total_unit_cost = 0;
+    var total_cost = 0;
     $("table.order-list tbody .unit-cost-value").each(function() {
-        total_unit_cost += parseFloat($(this).val());
+        total_cost += parseFloat($(this).val());
     });
 
-    $('input[name="total_unit_cost"]').val(total_unit_cost.toFixed(2));
+    $('input[name="total_cost"]').val(total_cost.toFixed(2));
 
     //Sum of tax
     var total_tax = 0;
