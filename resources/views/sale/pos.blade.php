@@ -916,14 +916,17 @@
                                         <div class="col-sm-4">
                                             <span class="totals-title">{{trans('file.Discount')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount-modal"> <i class="dripicons-document-edit"></i></button></span><span id="discount">0.00</span>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <!-- <div class="col-sm-4">
                                             <span class="totals-title">{{trans('file.Coupon')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#coupon-modal"><i class="dripicons-document-edit"></i></button></span><span id="coupon-text">0.00</span>
-                                        </div>
+                                        </div> -->
                                         <div class="col-sm-4">
                                             <span class="totals-title">{{trans('file.Tax')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-tax"><i class="dripicons-document-edit"></i></button></span><span id="tax">0.00</span>
                                         </div>
                                         <div class="col-sm-4">
                                             <span class="totals-title">{{trans('file.Shipping')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#shipping-cost-modal"><i class="dripicons-document-edit"></i></button></span><span id="shipping-cost">0.00</span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <span class="totals-title">{{trans('file.Extra Cost')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#extra-cost-modal"><i class="dripicons-document-edit"></i></button></span><span id="extra-cost">0.00</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1126,6 +1129,24 @@
                                 <input type="text" name="shipping_cost" class="form-control numkey" id="shipping-cost-val" step="any" onkeyup='saveValue(this);'>
                             </div>
                             <button type="button" name="shipping_cost_btn" class="btn btn-primary" data-dismiss="modal">{{trans('file.submit')}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- extra_cost modal -->
+            <div id="extra-cost-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{trans('file.Extra Cost')}}</h5>
+                            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" name="extra_cost" class="form-control numkey" id="extra-cost-val" step="any" onkeyup='saveValue(this);'>
+                            </div>
+                            <button type="button" name="extra_cost_btn" class="btn btn-primary" data-dismiss="modal">{{trans('file.submit')}}</button>
                         </div>
                     </div>
                 </div>
@@ -2630,6 +2651,10 @@ $('button[name="shipping_cost_btn"]').on("click", function() {
     calculateGrandTotal();
 });
 
+$('button[name="extra_cost_btn"]').on("click", function() {
+    calculateGrandTotal();
+});
+
 $('button[name="order_tax_btn"]').on("click", function() {
     calculateGrandTotal();
 });
@@ -3215,9 +3240,13 @@ function calculateGrandTotal() {
     if (!shipping_cost)
         shipping_cost = 0.00;
 
+    var extra_cost = parseFloat($('input[name="extra_cost"]').val());
+    if (!extra_cost)
+        extra_cost = 0.00;
+
     item = ++item + '(' + total_qty + ')';
     order_tax = (subtotal - order_discount) * (order_tax / 100);
-    var grand_total = (subtotal + order_tax + shipping_cost) - order_discount;
+    var grand_total = (subtotal + order_tax + shipping_cost + extra_cost) - order_discount;
     $('input[name="grand_total"]').val(grand_total.toFixed(2));
 
     couponDiscount();
@@ -3232,6 +3261,7 @@ function calculateGrandTotal() {
     $('#tax').text(order_tax.toFixed(2));
     $('input[name="order_tax"]').val(order_tax.toFixed(2));
     $('#shipping-cost').text(shipping_cost.toFixed(2));
+    $('#extra-cost').text(extra_cost.toFixed(2));
     $('#grand-total').text(grand_total.toFixed(2));
     $('input[name="grand_total"]').val(grand_total.toFixed(2));
 }
@@ -3317,6 +3347,7 @@ function cancel(rownumber) {
         rownumber--;
     }
     $('input[name="shipping_cost"]').val('');
+    $('input[name="extra_cost"]').val('');
     $('input[name="order_discount"]').val('');
     $('select[name="order_tax_rate_select"]').val(0);
     calculateTotal();

@@ -83,6 +83,7 @@ return [
 	'Net Unit Cost' => 'Net Unit Cost',
 	'Net Unit Price' => 'Net Unit Price',
 	'Shipping Cost' => 'Shipping Cost',
+    'Extra Cost' => 'Extra Cost',
 	'Subtotal' => 'SubTotal',
 	'Note' => 'Note',
 	'Items' => 'Items',

@@ -168,6 +168,8 @@ return [
 
 	"Shipping Cost" => "Ongkos kirim",
 
+    "Extra Cost" => "Biaya",
+
 	"Subtotal" => "Subtotal",
 
 	"Note" => "Catatan",
@@ -350,7 +352,7 @@ return [
 
 	"Invoice" => "Invoice",
 
-	"Shipping" => "Pgiriman",
+	"Shipping" => "Ongkir",
 
 	"Finalize Sale" => "Finalisasi Penjualan",
 
