@@ -376,7 +376,9 @@
                       </thead>
                       <tbody>
                         @foreach($best_selling_qty as $key=>$sale)
-                        <?php $product = DB::table('products')->find($sale->product_id); ?>
+                        <?php $product = DB::table('products')->find($sale->product_id);
+                            dd($product);
+                        ?>
                         <tr>
                           <td>{{$key + 1}}</td>
                           <td>{{$product->name}}<br>[{{$product->code}}]</td>
@@ -410,7 +412,7 @@
                         <?php $product = DB::table('products')->find($sale->product_id); ?>
                         <tr>
                           <td>{{$key + 1}}</td>
-                          {{-- <td>{{$product->name}}<br>[{{$product->code}}]</td> --}}
+                          <td>{{$product->name}}<br>[{{$product->code}}]</td>
                           <td>{{$sale->sold_qty}}</td>
                         </tr>
                         @endforeach
@@ -441,7 +443,7 @@
                         <?php $product = DB::table('products')->find($sale->product_id); ?>
                         <tr>
                           <td>{{$key + 1}}</td>
-                          {{-- <td>{{$product->name}}<br>[{{$product->code}}]</td> --}}
+                          <td>{{$product->name}}<br>[{{$product->code}}]</td>
                           <td>{{number_format((float)$sale->total_price, 0, ',', '.')}}</td>
                         </tr>
                         @endforeach
