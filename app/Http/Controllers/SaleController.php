@@ -1036,7 +1036,7 @@ class SaleController extends Controller
             $categories[] = $product_warehouse->cat;
             $brands[] = $product_warehouse->title;
         }
-        
+
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id, $expired_date, $categories, $brands];
         // die(json_encode($product_data));
         return $product_data;
@@ -1121,7 +1121,7 @@ class SaleController extends Controller
                                     ['categories.parent_id', $category_id],
                                     ['products.is_active', true],
                                     ['brand_id', $brand_id]
-                                ])->select('products.name', 'products.code', 'products.image')->get();
+                                ])->select('products.name', 'products.code','products.price', 'products.image')->get();
         }
         elseif(($category_id != 0) && ($brand_id == 0)){
             $lims_product_list = DB::table('products')
@@ -1132,14 +1132,14 @@ class SaleController extends Controller
                                 ])->orWhere([
                                     ['categories.parent_id', $category_id],
                                     ['products.is_active', true]
-                                ])->select('products.id', 'products.name', 'products.code', 'products.image', 'products.is_variant')->get();
+                                ])->select('products.id', 'products.name', 'products.code','products.price', 'products.image', 'products.is_variant')->get();
         }
         elseif(($category_id == 0) && ($brand_id != 0)){
             $lims_product_list = Product::where([
                                 ['brand_id', $brand_id],
                                 ['is_active', true]
                             ])
-                            ->select('products.id', 'products.name', 'products.code', 'products.image', 'products.is_variant')
+                            ->select('products.id', 'products.name', 'products.code', 'products.price', 'products.image', 'products.is_variant')
                             ->get();
         }
         elseif(!empty($product_search)){
@@ -1161,6 +1161,7 @@ class SaleController extends Controller
         else
             $lims_product_list = Product::where('is_active', true)->get();
 
+
         $index = 0;
         foreach ($lims_product_list as $product) {
             if($product->is_variant) {
@@ -1169,6 +1170,7 @@ class SaleController extends Controller
                 foreach ($lims_product_variant_data as $key => $variant) {
                     $data['name'][$index] = $product->name.' ['.$variant->name.']';
                     $data['code'][$index] = $variant->pivot['item_code'];
+                    $data['price'][$index] = $product->price;
                     $images = explode(",", $product->image);
                     $data['image'][$index] = $images[0];
                     $index++;
@@ -1183,6 +1185,7 @@ class SaleController extends Controller
                 $index++;
             }
         }
+
         return $data;
     }
 
@@ -1192,7 +1195,7 @@ class SaleController extends Controller
         $lims_product_list = Product::where([
             ['is_active', true],
             ['featured', true]
-        ])->select('products.id', 'products.name', 'products.code', 'products.image', 'products.is_variant')->get();
+        ])->select('products.id', 'products.name', 'products.code','products.price', 'products.image', 'products.is_variant')->get();
 
         $index = 0;
         foreach ($lims_product_list as $product) {
@@ -1202,6 +1205,7 @@ class SaleController extends Controller
                 foreach ($lims_product_variant_data as $key => $variant) {
                     $data['name'][$index] = $product->name.' ['.$variant->name.']';
                     $data['code'][$index] = $variant->pivot['item_code'];
+                    $data['price'][$index] = $product->price;
                     $images = explode(",", $product->image);
                     $data['image'][$index] = $images[0];
                     $index++;
@@ -1210,6 +1214,7 @@ class SaleController extends Controller
             else {
                 $data['name'][$index] = $product->name;
                 $data['code'][$index] = $product->code;
+                $data['price'][$index] = $product->price;
                 $images = explode(",", $product->image);
                 $data['image'][$index] = $images[0];
                 $index++;
