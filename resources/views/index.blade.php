@@ -376,9 +376,7 @@
                       </thead>
                       <tbody>
                         @foreach($best_selling_qty as $key=>$sale)
-                        <?php $product = DB::table('products')->find($sale->product_id);
-                            dd($product);
-                        ?>
+                        <?php $product = DB::table('products')->find($sale->product_id);?>
                         <tr>
                           <td>{{$key + 1}}</td>
                           <td>{{$product->name}}<br>[{{$product->code}}]</td>
