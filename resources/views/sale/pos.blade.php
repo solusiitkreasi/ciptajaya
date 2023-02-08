@@ -1967,9 +1967,9 @@ if(getSavedValue("localStorageQty")) {
     $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.sale-unit-operation-value').val(localStorageSaleUnitOperationValue[i]);
 
     product_price.push(parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.product_price').val()));
+    product_unit_cost.push(parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.edit_unit_cost').val()));
     var quantity = parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.qty').val());
     product_discount.push(parseFloat(localStorageProductDiscount[i] / localStorageQty[i]).toFixed(2));
-    product_unit_cost.push(parseFloat(localStorageProductUnitCost[i] / localStorageQty[i]).toFixed(2));
     tax_rate.push(parseFloat($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-rate').val()));
     tax_name.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-name').val());
     tax_method.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.tax-method').val());
