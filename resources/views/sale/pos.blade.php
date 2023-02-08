@@ -3171,7 +3171,8 @@ function calculateRowProductData(quantity) {
         unitConversion();
     else
         row_product_price = Number(product_price[rowindex]);
-        var v_unit_biaya = Number(product_unit_biaya[rowindex]);
+
+    var v_unit_biaya = Number(product_unit_biaya[rowindex]);
 
     if (tax_method[rowindex] == 1) {
         var net_unit_price = (row_product_price + v_unit_biaya)  - product_discount[rowindex];
