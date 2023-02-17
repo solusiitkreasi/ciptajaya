@@ -39,11 +39,11 @@ class Pointernal extends Fpdf
         $this->Ln(1);
         $this->Image('public/logo/'.$this->general_setting->site_logo, 12, 2, 25, 14);
         $this->setFont('Arial','B',12);
-        $this->cell(195,1,'CV. KLALIN SEJAHTERA MANDIRI',0,0, 'C');
+        $this->cell(195,1,'CIPTA JAYA',0,0, 'C');
         $this->setFont('Arial','B',16);
         $this->Ln(4);
         $this->setFont('Arial','',8);
-        $this->cell(195,2,'Jl. S. Mamberamo, Sorong - Papua Barat',0,0,'C');
+        $this->cell(195,2,'Jl. KM 9, Melati Jaya',0,0,'C');
         $this->cell(0,2,'Page '.$this->halaman." of ".$this->total_halaman,0,0,'R');
         $this->Ln(4);
         $this->Line(11,$this->GetY(),206,$this->GetY());
@@ -118,7 +118,7 @@ class Pointernal extends Fpdf
                 $this->Ln(4);
                 $baris++;
             }
-            
+
         $this->FooterTotal();
         $this->grand_harga = 0;
         $this->grand_kirim = 0;
