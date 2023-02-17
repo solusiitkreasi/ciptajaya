@@ -90,7 +90,8 @@ class Poeksternal extends Fpdf
         $this->cell(60,1,'Nama Barang',0,0,'L');
         $this->cell(25,1,'Qty',0,0,'C');
         $this->cell(20,1,'Unit',0,0,'C');
-        $this->cell(20,1,'Unit Price',0,0,'C');
+        $this->cell(20,1,'Unit Price',0,0,'L');
+        $this->cell(20,1,'Subtotal',0,0,'L');
         $this->Ln(5);
         $this->Line(11,$this->GetY(),206,$this->GetY());
         $this->Ln(4);
@@ -111,9 +112,10 @@ class Poeksternal extends Fpdf
                 $this->cell(60,1,$value->name,0,0,'L');
                 $this->cell(25,1,number_format($value->qty,0,"",'.'),0,0,'C');
                 $this->cell(20,1,$value->unit,0,0,'C');
-                $this->cell(20,1,number_format($value->price,0,"",'.'),0,0,'C');
+                $this->cell(20,1,number_format($value->price,0,"",'.'),0,0,'L');
+                $this->cell(20,1,number_format($value->price * $value->qty,0,"",'.'),0,0,'L');
                 $this->grand_kirim += $value->qty;
-                $this->grand_harga += $value->price;
+                $this->grand_harga += $value->price * $value->qty;
                 $this->Ln(4);
                 $baris++;
             }
