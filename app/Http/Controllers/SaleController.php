@@ -1920,7 +1920,7 @@ class SaleController extends Controller
         if (!empty($id)){
 
             $data_header = DB::table('sales as s')
-            ->leftjoin('customers as c', 's.customer_id', '=', 's.id')
+            ->leftjoin('customers as c', 's.customer_id', '=', 'c.id')
             ->leftjoin('warehouses as wh', 's.warehouse_id', '=', 'wh.id')
             ->where('s.id', $id)
             ->select('s.reference_no','s.sale_note','s.created_at',
