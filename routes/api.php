@@ -15,6 +15,6 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 // Route::middleware('auth:api')->group( function () {
-//     Route::resource('/products', [BarangController::class, 'index']);
+    // Route::resource('products', [BarangController::class, 'index']);
 // });
 Route::get('products', [BarangController::class, 'index']);

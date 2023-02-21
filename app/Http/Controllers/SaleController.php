@@ -1573,7 +1573,7 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->except('document');
-        //return dd($data);
+        // return dd( $data['created_at']);
         $document = $request->document;
         if ($document) {
             $v = Validator::make(
@@ -1596,6 +1596,11 @@ class SaleController extends Controller
             $data['payment_status'] = 2;
         else
             $data['payment_status'] = 4;
+
+        $edit_date = $data['created_at'];
+
+        $data['created_at'] = date('Y-m-d', strtotime($edit_date));
+
         $lims_sale_data = Sale::find($id);
         $lims_product_sale_data = Product_Sale::where('sale_id', $id)->get();
         $product_id = $data['product_id'];

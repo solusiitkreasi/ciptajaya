@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Product;
 use Validator;
-use App\Http\Controllers\Api\BaseController as BaseController;
+
 use App\Http\Resources\Product as ProductResource;
+
 
 class BarangController extends BaseController
 {
@@ -20,7 +21,8 @@ class BarangController extends BaseController
     {
         $products = Product::all();
 
-        return $this->sendResponse(ProductResource::collection($products), 'Products Retrieved Successfully.');
+        return $this->sendResponse(ProductResource::collection($products),
+        'Products Retrieved Successfully.');
     }
 
     /**

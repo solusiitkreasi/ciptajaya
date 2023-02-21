@@ -301,6 +301,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="">{{trans('file.Date')}} &nbsp;</label>
+                                            <div class="">
+                                                <div class="input-group">
+                                                    <input type="text" class="datepicker-field form-control" name="created_at" value="{{$lims_sale_data->created_at}}" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @if($lims_sale_data->coupon_id)
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -457,6 +467,17 @@
 
     $("#card-element").hide();
     $("#cheque").hide();
+
+    $(".datepicker-field").datepicker({
+        callback: function(startDate){
+            var created_at = startDate.format('YYYY-MM-DD hh:ii:ss');
+            var title = created_at ;
+            $(this).val(title);
+            $('input[name="created_at"]').val(created_at);
+        }
+    });
+
+    var created_at = $("input[name=created_at]").val();
 
     // array data depend on warehouse
     var lims_product_array = [];
